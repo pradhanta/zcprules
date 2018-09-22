@@ -1,2 +1,30 @@
 package com.zcp.businessrules;
 
+
+/*
+BR 1# Valid BIN: 020016 -> if not ignore
+BR 2# If version/Release Number= D0, then capture and claim status is A/Reject.
+BR 3#if Transaction code=B1, then capture and claim status
+BR 4# if transaction count=1, then capture and process rules
+BR 5: if PCN=<list> then capture and process rules
+
+Complex rules:
+
+BR 6: if service Provider ID Qualifier: 01 or 07 (change to 05), then capture and process rules
+BR 7: if service Provider ID: 01 -> for NCPCA valid values is 5812905, 5819656, 5824063 and 07 -> for NCPCA valid values is 1598158149, 1487181012, 1609375930. These number values would be stored in another table in DB, so we need to REF.
+*/
+
+rule "Process records only if valid bin"
+when
+   $a : com.myspace.zcp.Message(id != 020016L)
+then
+System.out.println("ASD3");
+   modify ($a) { setMessage("Stop") };
+end
+
+rule "Release Number is D0"
+when
+   $a : com.myspace.zcp.Message(versionNumberRH == "D0")
+then
+   modify ($a) { setMessage("Claim Approved") };
+end
