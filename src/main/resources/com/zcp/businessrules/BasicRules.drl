@@ -16,7 +16,7 @@ BR 7: if service Provider ID: 01 -> for NCPCA valid values is 5812905, 5819656, 
 
 rule "Process records only if valid bin"
 when
-   $a : com.myspace.zcp.Message(id != 020016L)
+   $a : Message(id != 020016L)
 then
 System.out.println("ASD3");
    modify ($a) { setMessage("Stop") };
@@ -24,7 +24,7 @@ end
 
 rule "Release Number is D0"
 when
-   $a : com.myspace.zcp.Message(versionNumberRH == "D0")
+   $a : Message(versionNumberRH == "D0")
 then
    modify ($a) { setMessage("Claim Approved") };
 end
